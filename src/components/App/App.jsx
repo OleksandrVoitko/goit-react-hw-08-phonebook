@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
+import { TailSpin } from 'react-loader-spinner';
+
 import Form from '../Form';
 import ContactList from '../ContactList';
 import Filter from '../Filter';
@@ -10,6 +12,8 @@ import { setEditingID } from 'redux/edit/slice';
 import { setEditingName } from 'redux/edit/slice';
 import { setEditingNumber } from 'redux/edit/slice';
 
+import { useFetchContactsQuery } from 'redux/contacts/contacts';
+
 import { addContact, delContact } from 'redux/items/slice';
 import { addFilter } from 'redux/filter/slice';
 import { Wrapper } from './App.styled';
@@ -17,8 +21,10 @@ import { Wrapper } from './App.styled';
 export default function App() {
   const save = 'Save';
   const add = 'Add contact';
-  const contacts = useSelector(state => state.items.items);
 
+  const { data, isFetching } = useFetchContactsQuery();
+
+  console.log(data);
   const filter = useSelector(state => state.filter);
 
   const editingName = useSelector(state => state.edit.editingName);
@@ -34,7 +40,7 @@ export default function App() {
     };
 
     if (
-      contacts.find(
+      data.find(
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
@@ -49,7 +55,7 @@ export default function App() {
   };
 
   const getFilteredContacts = () => {
-    return contacts.filter(contact =>
+    return data.filter(contact =>
       contact.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
     );
   };
@@ -79,11 +85,14 @@ export default function App() {
       <Form onSubmit={formSubmitHandler} textButton={add} />
       <h2>Contacts</h2>
       <Filter value={filter} onChange={filterHandler} />
-      <ContactList
-        contacts={getFilteredContacts()}
-        editingContact={editingContact}
-        deleteContact={deleteContact}
-      />
+      {isFetching && <TailSpin color="#2196f3" height={80} width={80} />}
+      {data && (
+        <ContactList
+          contacts={getFilteredContacts()}
+          editingContact={editingContact}
+          deleteContact={deleteContact}
+        />
+      )}
     </Wrapper>
   );
 }
