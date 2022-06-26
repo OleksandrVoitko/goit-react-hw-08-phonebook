@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { TailSpin } from 'react-loader-spinner';
-
 import { editing } from 'redux/edit/slice';
 import { resetEditState } from 'redux/edit/slice';
 
