@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { editing } from 'redux/edit/slice';
 import { resetEditState } from 'redux/edit/slice';
 
+import { useUpdateContactMutation } from 'redux/contacts/contacts';
+
 import { editContact } from 'redux/items/slice';
 import {
   FormWrapper,
@@ -16,12 +18,14 @@ import {
 export default function Form({
   onSubmit,
   textButton,
-  isLoading,
+  isLoadingNow,
   editingName = '',
   editingNumber = '',
 }) {
   const eID = useSelector(state => state.edit.editingID);
   const dispatch = useDispatch();
+
+  const [updateContact, { isLoading }] = useUpdateContactMutation();
 
   const [name, setName] = useState(editingName);
   const [number, setNumber] = useState(editingNumber);
@@ -58,12 +62,17 @@ export default function Form({
     setNumber('');
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (textButton === 'Save') {
       dispatch(editing(false));
       dispatch(editContact(editingContact));
+      try {
+        await updateContact(editingContact);
+      } catch (error) {
+        console.log(error);
+      }
       reset();
       dispatch(resetEditState());
     } else {
@@ -99,8 +108,8 @@ export default function Form({
           onChange={handleChange}
         />
       </Label>
-      <Button type="submit" disabled={isLoading}>
-        {isLoading ? textButton + '...' : textButton}
+      <Button type="submit" disabled={isLoadingNow}>
+        {isLoadingNow ? textButton + '...' : textButton}
       </Button>
     </FormWrapper>
   );

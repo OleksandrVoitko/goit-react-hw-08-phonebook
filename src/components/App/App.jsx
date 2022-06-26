@@ -38,7 +38,7 @@ export default function App() {
       name,
       number,
     };
-    console.log(newContact);
+ 
     if (
       data.find(
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
@@ -78,12 +78,12 @@ export default function App() {
         <Form
           onSubmit={formSubmitHandler}
           textButton={save}
-          isLoading={isLoading}
+          isLoadingNow={isLoading}
           editingName={editingName}
           editingNumber={editingNumber}
         />
       </EditModal>
-      <Form onSubmit={formSubmitHandler} textButton={add} isLoading={isLoading}/>
+      <Form onSubmit={formSubmitHandler} textButton={add} isLoadingNow={isLoading}/>
       <h2>Contacts</h2>
       <Filter value={filter} onChange={filterHandler} />
       {isFetching && <TailSpin color="#2196f3" height={80} width={80} />}

@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { itemsSlice } from './items/slice';
 import { filterSlice } from './filter/slice';
@@ -21,4 +20,3 @@ export const store = configureStore({
   ],
 });
 
-setupListeners(store.dispatch);
