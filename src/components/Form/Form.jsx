@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { TailSpin } from 'react-loader-spinner';
+
 import { editing } from 'redux/edit/slice';
 import { resetEditState } from 'redux/edit/slice';
 
@@ -16,12 +18,13 @@ import {
 export default function Form({
   onSubmit,
   textButton,
+  isLoading,
   editingName = '',
   editingNumber = '',
 }) {
   const eID = useSelector(state => state.edit.editingID);
   const dispatch = useDispatch();
-  
+
   const [name, setName] = useState(editingName);
   const [number, setNumber] = useState(editingNumber);
 
@@ -67,6 +70,7 @@ export default function Form({
       dispatch(resetEditState());
     } else {
       onSubmit(name, number);
+
       reset();
     }
   };
@@ -97,7 +101,9 @@ export default function Form({
           onChange={handleChange}
         />
       </Label>
-      <Button type="submit">{textButton}</Button>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? textButton + '...' : textButton}
+      </Button>
     </FormWrapper>
   );
 }

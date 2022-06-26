@@ -7,14 +7,9 @@ import {
   ContactButton,
 } from './ContactListItem.styled';
 
-const ContactListItem = ({
-  id,
-  name,
-  number,
-  onClickEditingContact,
-}) => {
+const ContactListItem = ({ id, name, number, onClickEditingContact }) => {
   const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
-  console.log(isDeleting);
+
   return (
     <>
       <ContactItem key={id}>

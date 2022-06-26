@@ -13,7 +13,6 @@ const ContactList = ({ contacts, editingContact }) => {
           name={name}
           number={number}
           onClickEditingContact={() => editingContact(id, name, number)}
-         
         ></ContactListItem>
       ))}
     </ContactsUl>

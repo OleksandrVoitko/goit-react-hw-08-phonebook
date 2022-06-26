@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { TailSpin } from 'react-loader-spinner';
 
 import Form from '../Form';
@@ -13,8 +13,9 @@ import { setEditingName } from 'redux/edit/slice';
 import { setEditingNumber } from 'redux/edit/slice';
 
 import { useFetchContactsQuery } from 'redux/contacts/contacts';
+import { useCreateContactMutation } from 'redux/contacts/contacts';
 
-import { addContact, delContact } from 'redux/items/slice';
+// import { addContact, delContact } from 'redux/items/slice';
 import { addFilter } from 'redux/filter/slice';
 import { Wrapper } from './App.styled';
 
@@ -23,6 +24,7 @@ export default function App() {
   const add = 'Add contact';
 
   const { data, isFetching } = useFetchContactsQuery();
+  const [createContact, { isLoading }] = useCreateContactMutation();
 
   const filter = useSelector(state => state.filter);
 
@@ -31,13 +33,12 @@ export default function App() {
 
   const dispatch = useDispatch();
 
-  const formSubmitHandler = (name, number) => {
+  const formSubmitHandler = async (name, number) => {
     const newContact = {
-      id: nanoid(),
       name,
       number,
     };
-
+    console.log(newContact);
     if (
       data.find(
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
@@ -45,8 +46,12 @@ export default function App() {
     ) {
       return alert(`${newContact.name} is already in contacts.`);
     }
-
-    dispatch(addContact(newContact));
+    
+    try {
+      await createContact(newContact);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const filterHandler = e => {
@@ -73,11 +78,12 @@ export default function App() {
         <Form
           onSubmit={formSubmitHandler}
           textButton={save}
+          isLoading={isLoading}
           editingName={editingName}
           editingNumber={editingNumber}
         />
       </EditModal>
-      <Form onSubmit={formSubmitHandler} textButton={add} />
+      <Form onSubmit={formSubmitHandler} textButton={add} isLoading={isLoading}/>
       <h2>Contacts</h2>
       <Filter value={filter} onChange={filterHandler} />
       {isFetching && <TailSpin color="#2196f3" height={80} width={80} />}
