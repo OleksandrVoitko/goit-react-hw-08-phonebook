@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import ContactListItem from '../ContactListItem';
 import { ContactsUl } from './ContactList.styled';
 
-const ContactList = ({ contacts, editingContact, deleteContact }) => {
+const ContactList = ({ contacts, editingContact }) => {
   return (
     <ContactsUl>
       {contacts.map(({ id, name, number }) => (
         <ContactListItem
           key={id}
+          id={id}
           name={name}
           number={number}
           onClickEditingContact={() => editingContact(id, name, number)}
-          onClickDeleteContact={() => deleteContact(id)}
+         
         ></ContactListItem>
       ))}
     </ContactsUl>

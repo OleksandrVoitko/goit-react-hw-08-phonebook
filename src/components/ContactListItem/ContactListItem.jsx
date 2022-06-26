@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDeleteContactMutation } from '../../redux/contacts/contacts';
 
 import {
   ContactItem,
@@ -11,8 +12,9 @@ const ContactListItem = ({
   name,
   number,
   onClickEditingContact,
-  onClickDeleteContact,
 }) => {
+  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+  console.log(isDeleting);
   return (
     <>
       <ContactItem key={id}>
@@ -26,11 +28,12 @@ const ContactListItem = ({
             Edit
           </ContactButton>
           <ContactButton
+            disabled={isDeleting}
             color="red"
             type="submit"
-            onClick={onClickDeleteContact}
+            onClick={() => deleteContact(id)}
           >
-            Delete
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </ContactButton>
         </WrapperButtonDiv>
       </ContactItem>

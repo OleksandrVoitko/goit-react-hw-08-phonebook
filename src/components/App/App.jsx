@@ -24,7 +24,6 @@ export default function App() {
 
   const { data, isFetching } = useFetchContactsQuery();
 
-  console.log(data);
   const filter = useSelector(state => state.filter);
 
   const editingName = useSelector(state => state.edit.editingName);
@@ -60,10 +59,6 @@ export default function App() {
     );
   };
 
-  const deleteContact = id => {
-    dispatch(delContact(id));
-  };
-
   const editingContact = (id, name, number) => {
     dispatch(editing(true));
     dispatch(setEditingID(id));
@@ -90,7 +85,6 @@ export default function App() {
         <ContactList
           contacts={getFilteredContacts()}
           editingContact={editingContact}
-          deleteContact={deleteContact}
         />
       )}
     </Wrapper>
