@@ -6,7 +6,6 @@ import { resetEditState } from 'redux/edit/slice';
 
 import { useUpdateContactMutation } from 'redux/contacts/contacts';
 
-import { editContact } from 'redux/items/slice';
 import {
   FormWrapper,
   Label,
@@ -67,7 +66,7 @@ export default function Form({
 
     if (textButton === 'Save') {
       dispatch(editing(false));
-      dispatch(editContact(editingContact));
+
       try {
         await updateContact(editingContact);
       } catch (error) {

@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-// import { nanoid } from 'nanoid';
+import { useState, useEffect } from 'react';
+
 import { TailSpin } from 'react-loader-spinner';
 
 import Form from '../Form';
@@ -15,18 +16,16 @@ import { setEditingNumber } from 'redux/edit/slice';
 import { useFetchContactsQuery } from 'redux/contacts/contacts';
 import { useCreateContactMutation } from 'redux/contacts/contacts';
 
-// import { addContact, delContact } from 'redux/items/slice';
-import { addFilter } from 'redux/filter/slice';
 import { Wrapper } from './App.styled';
 
 export default function App() {
-  const save = 'Save';
-  const add = 'Add contact';
+  const [filterContacts, setFilterContacts] = useState('');
 
   const { data, isFetching } = useFetchContactsQuery();
   const [createContact, { isLoading }] = useCreateContactMutation();
 
-  const filter = useSelector(state => state.filter);
+  const save = 'Save';
+  const add = 'Add contact';
 
   const editingName = useSelector(state => state.edit.editingName);
   const editingNumber = useSelector(state => state.edit.editingNumber);
@@ -38,7 +37,7 @@ export default function App() {
       name,
       number,
     };
- 
+
     if (
       data.find(
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
@@ -46,7 +45,7 @@ export default function App() {
     ) {
       return alert(`${newContact.name} is already in contacts.`);
     }
-    
+
     try {
       await createContact(newContact);
     } catch (error) {
@@ -55,12 +54,14 @@ export default function App() {
   };
 
   const filterHandler = e => {
-    dispatch(addFilter(e.currentTarget.value));
+    setFilterContacts(e.currentTarget.value);
   };
 
   const getFilteredContacts = () => {
     return data.filter(contact =>
-      contact.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+      contact.name
+        .toLocaleLowerCase()
+        .includes(filterContacts.toLocaleLowerCase())
     );
   };
 
@@ -83,9 +84,13 @@ export default function App() {
           editingNumber={editingNumber}
         />
       </EditModal>
-      <Form onSubmit={formSubmitHandler} textButton={add} isLoadingNow={isLoading}/>
+      <Form
+        onSubmit={formSubmitHandler}
+        textButton={add}
+        isLoadingNow={isLoading}
+      />
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={filterHandler} />
+      <Filter value={filterContacts} onChange={filterHandler} />
       {isFetching && <TailSpin color="#2196f3" height={80} width={80} />}
       {data && (
         <ContactList

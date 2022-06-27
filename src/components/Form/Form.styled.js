@@ -17,7 +17,7 @@ export const InputName = styled.input`
 export const InputNumber = styled.input`
   margin-left: 13px;
   outline: none;
-  color: teal;
+  color: #2196f3;
 `;
 export const Button = styled.button`
   width: 150px;
