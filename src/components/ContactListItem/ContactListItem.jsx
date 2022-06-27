@@ -14,7 +14,7 @@ import {
 const ContactListItem = ({ id, name, number, onClickEditingContact }) => {
   const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
 
-  const del = async id => {
+  const deleteContactOnClick = async id => {
     try {
       await deleteContact(id);
 
@@ -40,7 +40,7 @@ const ContactListItem = ({ id, name, number, onClickEditingContact }) => {
             disabled={isDeleting}
             color="red"
             type="submit"
-            onClick={() => del(id)}
+            onClick={() => deleteContactOnClick(id)}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </ContactButton>

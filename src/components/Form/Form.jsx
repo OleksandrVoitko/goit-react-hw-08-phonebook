@@ -65,12 +65,11 @@ export default function Form({
     if (textButton === 'Save') {
       try {
         await updateContact(editingContact);
-        toast.success(`Contact ${name} edited!`);
+        toast.success(`Contact: ${name} - edited!`);
+        resetEditingState();
       } catch (error) {
         toast.error(error);
       }
-
-      resetEditingState();
     } else {
       onSubmit(name, number);
       resetState();

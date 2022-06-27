@@ -41,11 +41,11 @@ export default function App() {
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
-      return toast.warn(`${newContact.name} is already in contacts.`);
+      return toast.warn(`Contact: ${newContact.name} - already in contacts!`);
     }
     try {
       await createContact(newContact);
-      toast.success(`Contact ${name} added!`);
+      toast.success(`Contact: ${name} - added!`);
     } catch (error) {
       toast.error(error);
     }
