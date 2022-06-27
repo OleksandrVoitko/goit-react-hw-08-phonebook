@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import 'react-toastify/dist/ReactToastify.min.css';
+import { toast } from 'react-toastify';
 
 import { useUpdateContactMutation } from 'redux/contacts/contacts';
 
@@ -52,20 +54,26 @@ export default function Form({
     }
   };
 
+  const resetState = () => {
+    setName('');
+    setNumber('');
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (textButton === 'Save') {
       try {
         await updateContact(editingContact);
+        toast.success(`Contact ${name} edited!`);
       } catch (error) {
-        console.log(error);
+        toast.error(error);
       }
+
       resetEditingState();
     } else {
       onSubmit(name, number);
-
-      resetEditingState();
+      resetState();
     }
   };
 

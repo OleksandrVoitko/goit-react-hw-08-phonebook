@@ -1,4 +1,8 @@
 import React from 'react';
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 import { useDeleteContactMutation } from '../../redux/contacts/contacts';
 
 import {
@@ -9,6 +13,16 @@ import {
 
 const ContactListItem = ({ id, name, number, onClickEditingContact }) => {
   const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+
+  const del = async id => {
+    try {
+      await deleteContact(id);
+
+      toast.success(`Contact: ${name} - deleted!`);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   return (
     <>
@@ -26,12 +40,13 @@ const ContactListItem = ({ id, name, number, onClickEditingContact }) => {
             disabled={isDeleting}
             color="red"
             type="submit"
-            onClick={() => deleteContact(id)}
+            onClick={() => del(id)}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </ContactButton>
         </WrapperButtonDiv>
       </ContactItem>
+      <ToastContainer />
     </>
   );
 };

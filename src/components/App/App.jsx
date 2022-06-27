@@ -2,6 +2,9 @@ import { useState } from 'react';
 
 import { TailSpin } from 'react-loader-spinner';
 
+import 'react-toastify/dist/ReactToastify.min.css';
+import { toast } from 'react-toastify';
+
 import Form from '../Form';
 import ContactList from '../ContactList';
 import Filter from '../Filter';
@@ -24,8 +27,8 @@ export default function App() {
   const { data, isFetching } = useFetchContactsQuery();
   const [createContact, { isLoading }] = useCreateContactMutation();
 
-  const save = 'Save';
-  const add = 'Add contact';
+  const SAVE = 'Save';
+  const ADD = 'Add contact';
 
   const formSubmitHandler = async (name, number) => {
     const newContact = {
@@ -38,13 +41,13 @@ export default function App() {
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
-      return alert(`${newContact.name} is already in contacts.`);
+      return toast.warn(`${newContact.name} is already in contacts.`);
     }
-
     try {
       await createContact(newContact);
+      toast.success(`Contact ${name} added!`);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
 
@@ -74,7 +77,7 @@ export default function App() {
       <EditModal isEditing={editContact.isEditing} reset={resetEditingState}>
         <Form
           onSubmit={formSubmitHandler}
-          textButton={save}
+          textButton={SAVE}
           isLoadingNow={isLoading}
           resetEditingState={resetEditingState}
           editId={editContact.id}
@@ -84,7 +87,7 @@ export default function App() {
       </EditModal>
       <Form
         onSubmit={formSubmitHandler}
-        textButton={add}
+        textButton={ADD}
         isLoadingNow={isLoading}
       />
       <h2>Contacts</h2>
