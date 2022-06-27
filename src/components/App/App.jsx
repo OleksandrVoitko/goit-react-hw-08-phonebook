@@ -1,5 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { TailSpin } from 'react-loader-spinner';
 
@@ -8,11 +7,6 @@ import ContactList from '../ContactList';
 import Filter from '../Filter';
 import EditModal from '../EditModal/EditModal';
 
-import { editing } from 'redux/edit/slice';
-import { setEditingID } from 'redux/edit/slice';
-import { setEditingName } from 'redux/edit/slice';
-import { setEditingNumber } from 'redux/edit/slice';
-
 import { useFetchContactsQuery } from 'redux/contacts/contacts';
 import { useCreateContactMutation } from 'redux/contacts/contacts';
 
@@ -20,17 +14,18 @@ import { Wrapper } from './App.styled';
 
 export default function App() {
   const [filterContacts, setFilterContacts] = useState('');
+  const [editContact, setEditContact] = useState({
+    isEditing: false,
+    id: '',
+    name: '',
+    number: '',
+  });
 
   const { data, isFetching } = useFetchContactsQuery();
   const [createContact, { isLoading }] = useCreateContactMutation();
 
   const save = 'Save';
   const add = 'Add contact';
-
-  const editingName = useSelector(state => state.edit.editingName);
-  const editingNumber = useSelector(state => state.edit.editingNumber);
-
-  const dispatch = useDispatch();
 
   const formSubmitHandler = async (name, number) => {
     const newContact = {
@@ -66,22 +61,25 @@ export default function App() {
   };
 
   const editingContact = (id, name, number) => {
-    dispatch(editing(true));
-    dispatch(setEditingID(id));
-    dispatch(setEditingName(name));
-    dispatch(setEditingNumber(number));
+    setEditContact({ isEditing: true, id, name, number });
+  };
+
+  const resetEditingState = () => {
+    setEditContact({ isEditing: false, id: '', name: '', number: '' });
   };
 
   return (
     <Wrapper>
       <h2>Phone book</h2>
-      <EditModal>
+      <EditModal isEditing={editContact.isEditing} reset={resetEditingState}>
         <Form
           onSubmit={formSubmitHandler}
           textButton={save}
           isLoadingNow={isLoading}
-          editingName={editingName}
-          editingNumber={editingNumber}
+          resetEditingState={resetEditingState}
+          editId={editContact.id}
+          editingName={editContact.name}
+          editingNumber={editContact.number}
         />
       </EditModal>
       <Form

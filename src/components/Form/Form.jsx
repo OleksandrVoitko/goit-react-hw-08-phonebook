@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { editing } from 'redux/edit/slice';
-import { resetEditState } from 'redux/edit/slice';
 
 import { useUpdateContactMutation } from 'redux/contacts/contacts';
 
@@ -18,19 +15,18 @@ export default function Form({
   onSubmit,
   textButton,
   isLoadingNow,
+  resetEditingState = '',
+  editId = '',
   editingName = '',
   editingNumber = '',
 }) {
-  const eID = useSelector(state => state.edit.editingID);
-  const dispatch = useDispatch();
-
   const [updateContact, { isLoading }] = useUpdateContactMutation();
 
   const [name, setName] = useState(editingName);
   const [number, setNumber] = useState(editingNumber);
 
   const editingContact = {
-    id: eID,
+    id: editId,
     name,
     number,
   };
@@ -56,28 +52,20 @@ export default function Form({
     }
   };
 
-  const reset = () => {
-    setName('');
-    setNumber('');
-  };
-
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (textButton === 'Save') {
-      dispatch(editing(false));
-
       try {
         await updateContact(editingContact);
       } catch (error) {
         console.log(error);
       }
-      reset();
-      dispatch(resetEditState());
+      resetEditingState();
     } else {
       onSubmit(name, number);
 
-      reset();
+      resetEditingState();
     }
   };
 
