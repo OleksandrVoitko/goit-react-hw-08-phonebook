@@ -22,7 +22,7 @@ export default function Form({
   editingName = '',
   editingNumber = '',
 }) {
-  const [updateContact, { isLoading }] = useUpdateContactMutation();
+  const [updateContact] = useUpdateContactMutation();
 
   const [name, setName] = useState(editingName);
   const [number, setNumber] = useState(editingNumber);
