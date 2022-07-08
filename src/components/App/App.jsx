@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <Wrapper>
-      <h2>Phone book</h2>
+      <h2>Phone Book</h2>
       <EditModal isEditing={editContact.isEditing} reset={resetEditingState}>
         <Form
           onSubmit={formSubmitHandler}
